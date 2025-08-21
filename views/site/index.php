@@ -1,0 +1,114 @@
+<?php
+$knowledgeBase = [
+    'Marvel' => [
+        'Персонажи' => 'В Marvel множество известных персонажей, таких как Железный человек, Капитан Америка, Тор и другие.',
+        'Фильмы' => 'Киновселенная Marvel включает фильмы начиная с "Железного человека" (2008) и сотни других.',
+        'Комиксы' => 'Marvel выпускает комиксы с 1939 года, включая легендарные серии от Стэна Ли и многих других.',
+    ],
+    'DC' => [
+        'Персонажи' => 'DC известен своими героями, такими как Супермен, Бэтмен, Чудо-женщина и Флэш.',
+        'Фильмы' => 'Киновселенная DC включает фильмы, например, "Чудо-женщина", "Аквамен" и серию "Темный рыцарь".',
+        'Комиксы' => 'Комиксы DC выходят с 1934 года и охватывают множество жанров и эпох.',
+    ],
+];
+
+$selectedTopic = $_GET['topic'] ?? 'Marvel';
+$selectedSubtopic = $_GET['subtopic'] ?? array_key_first($knowledgeBase[$selectedTopic]);
+?>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f4f9;
+            color: #222;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .block {
+            flex: 1;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            background: #fff;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .block h2 {
+            text-align: center;
+            margin-top: 0;
+            color: #444;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e2e2;
+            padding-bottom: 5px;
+        }
+        .item {
+            padding: 8px 12px;
+            margin: 6px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .item:hover {
+            background-color: #f0f0f7;
+        }
+        .selected {
+            background-color: #ffd54f;
+            font-weight: bold;
+            box-shadow: 0 0 8px #ffca28;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        #content p {
+            font-size: 1.1em;
+            line-height: 1.5;
+            padding: 0 10px;
+            min-height: 100px;
+        }
+    </style>
+<div class="container">
+    <div class="block" id="topics">
+        <h2>Тема</h2>
+        <?php foreach ($knowledgeBase as $topic => $subtopics): ?>
+            <?php $selectedClass = ($topic === $selectedTopic) ? 'selected' : ''; ?>
+            <div class="item <?= $selectedClass ?>">
+                <a href="?topic=<?= urlencode($topic) ?>">
+                    <?= htmlspecialchars($topic) ?>
+                </a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <div class="block" id="subtopics">
+        <h2>Подтема</h2>
+        <?php if (isset($knowledgeBase[$selectedTopic])):
+            foreach ($knowledgeBase[$selectedTopic] as $subtopic => $content):
+                $selectedClass = ($subtopic === $selectedSubtopic) ? 'selected' : '';
+                ?>
+                <div class="item <?= $selectedClass ?>">
+                    <a href="?topic=<?= urlencode($selectedTopic) ?>&subtopic=<?= urlencode($subtopic) ?>">
+                        <?= htmlspecialchars($subtopic) ?>
+                    </a>
+                </div>
+            <?php endforeach;
+        endif; ?>
+    </div>
+
+    <div class="block" id="content">
+        <h2>Содержимое</h2>
+        <p>
+            <?= htmlspecialchars($knowledgeBase[$selectedTopic][$selectedSubtopic] ?? 'Текст не найден для выбранной подтемы.') ?>
+        </p>
+    </div>
+</div
